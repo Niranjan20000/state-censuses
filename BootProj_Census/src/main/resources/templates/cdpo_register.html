@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CDPO Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef2f3;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 380px;
+            margin: 60px auto;
+            padding: 25px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.2);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        input, select {
+            width: 95%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border: 1px solid #777;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #0077cc;
+            color: white;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #005fa3;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h2>CDPO Registration</h2>
+
+    <p class="error" th:text="${error}"></p>
+
+    <form action="/cdpo/register" method="post">
+
+        <input type="text" name="username" placeholder="Username" required>
+
+        <input type="text" name="name" placeholder="Full Name" required>
+
+        <input type="text" name="mobile" placeholder="Mobile Number" minlength="10" maxlength="10" required>
+
+        <input type="password" name="password" placeholder="Password" required>
+
+        <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+
+        <select name="state" required>
+            <option value="">Select State</option>
+            <option value="Odisha">Odisha</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Bihar">Bihar</option>
+        </select>
+
+        <input type="text" name="district" placeholder="District" required>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p style="text-align:center; margin-top:10px;">
+        Already registered? <a href="/cdpo/login">Login</a>
+    </p>
+</div>
+</body>
+</html>

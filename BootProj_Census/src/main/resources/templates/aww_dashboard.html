@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>AWW Workers Dashboard</title>
+
+    <!-- External Styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #dbe9ff, #f0f2f5);
+            overflow-x: hidden;
+        }
+
+        header {
+            background: linear-gradient(90deg, #2e86de, #1b4f72);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .container {
+            display: flex;
+            position: relative;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -260px;
+            width: 260px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(12px);
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+            padding: 2rem 1rem;
+            transition: 0.4s;
+            z-index: 1000;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-header span {
+            color: #2e86de;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .sidebar-header a {
+            display: block;
+            margin-top: 1rem;
+            padding: 0.6rem;
+            border: 1px solid #2e86de;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #2e86de;
+            transition: 0.3s;
+        }
+
+        .sidebar-header a:hover {
+            background: #2e86de;
+            color: white;
+        }
+
+        /* Toggle Button */
+        .toggle-button {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: #ffffffcc;
+            color: #2e86de;
+            padding: 0.4rem 0.8rem;
+            font-size: 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            z-index: 1001;
+        }
+
+        .toggle-button.hidden {
+            display: none;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 3rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            justify-items: center;
+        }
+
+        .main-content.blurred {
+            filter: blur(5px);
+        }
+
+        button {
+            width: 250px;
+            height: 250px;
+            border: none;
+            cursor: pointer;
+            border-radius: 25px;
+            background: linear-gradient(145deg, #ffffff, #e3f2fd);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            color: #2e86de;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #2e86de;
+            color: white;
+            transform: scale(1.08);
+        }
+
+        button i {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            color: #2e86de;
+            font-weight: bold;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>AWW Workers - Dashboard</h2>
+</header>
+
+<div class="container" onclick="closeSidebar(event)">
+
+    <!-- Sidebar Toggle -->
+    <div class="toggle-button" id="toggleBtn" onclick="toggleSidebar(event)">
+        &lt;
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+
+        <div class="sidebar-header">
+            <span th:text="'Hi, WELCOME TO STATECENSUS HUB!'">
+                Hi, Worker
+            </span>
+
+            <a th:href="@{/aww/profile}">Profile</a>
+            <a th:href="@{/aww/logout}">Logout</a>
+        </div>
+
+    </div>
+
+    <!-- Dashboard Buttons -->
+    <div class="main-content" id="mainContent">
+
+        <button th:onclick="'location.href=\'/aww/household/new\''">
+            <i class="fa-solid fa-house"></i>
+            Create New Household Record
+        </button>
+
+        <button th:onclick="'location.href=\'/report/survey\''">
+            <i class="fa-solid fa-chart-pie"></i>
+            Survey Report
+        </button>
+
+    </div>
+</div>
+
+<footer>
+    StateCensus Hub – One Platform. Complete Population Intelligence.
+</footer>
+
+<script>
+    function toggleSidebar(event) {
+        event.stopPropagation();
+        let sidebar = document.getElementById("sidebar");
+        let main = document.getElementById("mainContent");
+        let toggle = document.getElementById("toggleBtn");
+
+        sidebar.classList.toggle("active");
+        main.classList.toggle("blurred");
+        toggle.classList.toggle("hidden");
+    }
+
+    function closeSidebar(event) {
+        let sidebar = document.getElementById("sidebar");
+        let main = document.getElementById("mainContent");
+        let toggle = document.getElementById("toggleBtn");
+
+        if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+            sidebar.classList.remove("active");
+            main.classList.remove("blurred");
+            toggle.classList.remove("hidden");
+        }
+    }
+</script>
+
+</body>
+</html>

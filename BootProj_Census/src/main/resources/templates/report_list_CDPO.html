@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Generate Report</title>
+</head>
+<body>
+    <h2>Generate Household Report by Date</h2>
+    <form th:action="@{/cdpo/reports/generate}" method="post">
+        <input type="date" name="reportDate" required />
+        <button type="submit">Generate PDF</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>All Households</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <h2>All Households</h2>
+    <table border="1" style="width:90%; margin:2rem auto;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Head Name</th>
+                <th>State</th>
+                <th>Survey Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="h : ${households}">
+                <td th:text="${h.householdId}"></td>
+                <td th:text="${h.headName}"></td>
+                <td th:text="${h.state}"></td>
+                <td th:text="${h.surveyTimestamp}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

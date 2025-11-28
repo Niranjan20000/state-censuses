@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>PDF Report</title>
+</head>
+<body>
+    <h2>Survey Report for <span th:text="${reportDate}"></span></h2>
+    <table border="1" style="width:80%; margin:2rem auto;">
+        <thead>
+            <tr>
+                <th>Household ID</th>
+                <th>Head Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="h : ${households}">
+                <td th:text="${h.id}"></td>
+                <td th:text="${h.head}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

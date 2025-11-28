@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>All Members</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <h2>All Members</h2>
+    <table border="1" style="width:90%; margin:2rem auto;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Household ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="m : ${members}">
+                <td th:text="${m.id}"></td>
+                <td th:text="${m.fullName}"></td>
+                <td th:text="${m.age}"></td>
+                <td th:text="${m.gender}"></td>
+                <td th:text="${m.household.householdId}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Survey Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f7fa; margin: 0; }
+        header { background: linear-gradient(90deg, #2e86de, #1b4f72); color: white; padding: 1rem; text-align: center; }
+        .report-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; padding: 2rem; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 1.5rem; text-align: center; }
+        .charts-container { display: flex; gap: 2rem; padding: 2rem; justify-content: center; }
+        .chart-card { flex: 1; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 1.5rem; }
+        canvas { max-width: 100%; height: 300px; }
+        table { width: 80%; margin: 2rem auto; border-collapse: collapse; text-align: center; }
+        table, th, td { border: 1px solid #ccc; padding: 0.6rem; }
+        th { background: #2e86de; color: white; }
+        footer { text-align: center; padding: 1rem; background: #f8f9fa; position: fixed; bottom: 0; width: 100%; color: #2e86de; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h2>Survey Report</h2>
+</header>
+
+<!-- Summary Cards -->
+<div class="report-container">
+    <div class="card"><h3>Total Households</h3><p th:text="${totalHouseholds}"></p></div>
+    <div class="card"><h3>Total Members</h3><p th:text="${totalMembers}"></p></div>
+    <div class="card"><h3>Surveys Done Today</h3><p th:text="${todaysSurveys}"></p></div>
+    <div class="card"><h3>Households with Internet</h3><p th:text="${internetConnected}"></p></div>
+</div>
+
+<!-- Charts Side by Side -->
+<div class="charts-container">
+    <div class="chart-card">
+        <h3>Household Amenities</h3>
+        <canvas id="amenitiesChart"></canvas>
+    </div>
+    <div class="chart-card">
+        <h3>Survey Trend (Last 7 Days)</h3>
+        <canvas id="trendChart"></canvas>
+    </div>
+</div>
+
+<!-- Date-based Report Generator -->
+<div class="card" style="margin:2rem;">
+    <h3>Generate Report by Date</h3>
+    <input type="date" id="reportDate" />
+    <button onclick="generateReport()">Generate Report</button>
+</div>
+
+<div id="reportResult" style="padding:2rem;"></div>
+
+<footer>
+    <a th:href="@{/aww/dashboard}">Back to Dashboard</a>
+</footer>
+
+<script>
+    // Amenities Pie Chart (real values injected by Thymeleaf)
+    const amenitiesCtx = document.getElementById('amenitiesChart').getContext('2d');
+    new Chart(amenitiesCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Electricity', 'Internet', 'TV', 'Refrigerator'],
+            datasets: [{
+                data: [
+                    [[${electricityAvailable}]],
+                    [[${internetConnected}]],
+                    [[${tvAvailable}]],
+                    [[${refrigeratorAvailable}]]
+                ],
+                backgroundColor: ['#2e86de', '#28a745', '#ffc107', '#dc3545']
+            }]
+        }
+    });
+
+    // Survey Trend Line Chart (real values injected by Thymeleaf)
+    const trendCtx = document.getElementById('trendChart').getContext('2d');
+    new Chart(trendCtx, {
+        type: 'line',
+        data: {
+            labels: [[${last7DaysLabels}]],   <!-- e.g. ["Nov 22","Nov 23","Nov 24"] -->
+            datasets: [{
+                label: 'Surveys',
+                data: [[${last7DaysCounts}]], <!-- e.g. [5, 8, 12, 7, 10, 15, 20] -->
+                borderColor: '#2e86de',
+                backgroundColor: 'rgba(46,134,222,0.2)',
+                fill: true,
+                tension: 0.3
+            }]
+        }
+    });
+
+    // Date-based report generator with PDF export (fetches real data via AJAX)
+    async function generateReport() {
+        const date = document.getElementById("reportDate").value;
+        if (!date) {
+            alert("Please select a date");
+            return;
+        }
+
+        const response = await fetch(`/report/survey/by-date?date=${date}`);
+        const households = await response.json();
+
+        let table = `
+            <h3>Report for ${date}</h3>
+            <table>
+                <thead><tr><th>Household ID</th><th>Head Name</th></tr></thead>
+                <tbody>
+                    ${households.map(h => `<tr><td>${h.id}</td><td>${h.head}</td></tr>`).join("")}
+                </tbody>
+            </table>
+        `;
+        document.getElementById("reportResult").innerHTML = table;
+
+        // Generate PDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFontSize(16);
+        doc.text(`Survey Report for ${date}`, 20, 20);
+
+        let y = 40;
+        doc.setFontSize(12);
+        doc.text("Household ID    Head Name", 20, y);
+        y += 10;
+        households.forEach(h => {
+            doc.text(`${h.id}    ${h.head}`, 20, y);
+            y += 10;
+        });
+
+        doc.save(`Survey_Report_${date}.pdf`);
+    }
+</script>
+
+</body>
+</html>

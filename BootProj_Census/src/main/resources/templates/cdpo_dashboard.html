@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>CDPO Officer Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background: #f0fdf4; /* light green background */
+        }
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background: #2e7d32; /* deep green */
+            color: white;
+            padding: 2rem 1rem;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+        .sidebar ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar ul li { margin: 1rem 0; }
+        .sidebar ul li a {
+            color: white; text-decoration: none; font-weight: 500;
+            padding: 0.5rem 1rem; display: block; border-radius: 6px;
+            transition: background 0.3s;
+        }
+        .sidebar ul li a:hover { background: rgba(255,255,255,0.2); }
+
+        /* Main content */
+        .main-content { flex: 1; padding: 2rem; }
+        .main-content h1 { margin-bottom: 0.5rem; color: #1b5e20; }
+        .main-content p { margin: 0.2rem 0; color: #444; }
+
+        /* Stats cards */
+        .stats { display: flex; gap: 1.5rem; margin: 2rem 0; }
+        .card {
+            flex: 1; border-radius: 12px; padding: 1.5rem; color: white;
+            text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .card h3 { margin-bottom: 0.5rem; font-size: 1.2rem; }
+        .card p { font-size: 2rem; font-weight: bold; }
+        .card.green-dark { background: #2e7d32; }
+        .card.green-mid  { background: #43a047; }
+        .card.green-light{ background: #66bb6a; }
+
+        /* Tables */
+        .tables { display: flex; gap: 2rem; margin-bottom: 2rem; }
+        .table-section {
+            flex: 1; background: white; border-radius: 12px; padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .table-section h3 { margin-bottom: 1rem; color: #2e7d32; }
+        .table-section table { width: 100%; border-collapse: collapse; }
+        .table-section th, .table-section td {
+            border: 1px solid #ddd; padding: 0.6rem; text-align: left;
+        }
+        .table-section th { background: #e8f5e9; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul>
+            <li><a th:href="@{/cdpo/dashboard}">Dashboard</a></li>
+            <li><a th:href="@{/household/all}">View All Households</a></li>
+            <li><a th:href="@{/member/all}">View All Members</a></li>
+            <li><a th:href="@{/cdpo/reports}">Reports</a></li>
+            <li><a th:href="@{/cdpo/logout}">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>CDPO Officer Dashboard</h1>
+        <p>Welcome, CDPO Officer</p>
+        <p th:text="${#dates.format(#dates.createNow(), 'EEEE, MMMM dd, yyyy HH:mm')}"></p>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="card green-dark">
+                <h3>Total Households</h3>
+                <p th:text="${totalHouseholds}">0</p>
+            </div>
+            <div class="card green-mid">
+                <h3>Total Members</h3>
+                <p th:text="${totalMembers}">0</p>
+            </div>
+            <div class="card green-light">
+                <h3>Today's Registrations</h3>
+                <p th:text="${todaysRegistrations}">0</p>
+            </div>
+        </div>
+
+        <!-- Tables -->
+        <div class="tables">
+            <div class="table-section">
+                <h3>Recent Households Added</h3>
+                <table>
+                    <tr><th>ID</th><th>Head Name</th><th>State</th><th>Date</th></tr>
+                    <tr th:each="household : ${recentHouseholds}">
+                        <td th:text="${household.id}"></td>
+                        <td th:text="${household.headName}"></td>
+                        <td th:text="${household.state}"></td>
+                        <td th:text="${household.surveyTimestamp}"></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="table-section">
+                <h3>Recent Members Added</h3>
+                <table>
+                    <tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Household</th><th>View</th></tr>
+                    <tr th:each="member : ${recentMembers}">
+                        <td th:text="${member.id}"></td>
+                        <td th:text="${member.fullName}"></td>
+                        <td th:text="${member.age}"></td>
+                        <td th:text="${member.gender}"></td>
+                        <td th:text="${member.household.householdId}"></td>
+                        <td><a th:href="@{'/member/view/' + ${member.id}}">View</a></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Household Data Collection</title>
+  <style>
+    body{font-family:Arial;margin:20px;background:#f4f6f8}
+    .card{background:#fff;padding:18px;border-radius:8px;max-width:1000px;margin:auto;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+    label{font-weight:600;margin-top:10px;display:block}
+    input,select{width:100%;padding:8px;margin-top:6px;border-radius:6px;border:1px solid #ccc}
+    .member-card{background:#eef7ff;padding:12px;border-radius:6px;margin-top:12px;border-left:4px solid #3b82f6}
+    .btn{padding:10px 14px;border:none;border-radius:6px;cursor:pointer}
+    .btn-add{background:#10b981;color:#fff}
+    .btn-save{background:#0ea5e9;color:#fff;width:100%}
+    .btn-remove{background:#ef4444;color:#fff;float:right}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>India Census — Household & Population Enumeration</h2>
+
+    <form th:action="@{/aww/household/save}" method="post" th:object="${householdDto}">
+      <!-- If using Spring Security add CSRF token:
+           <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> -->
+      <label>Survey Timestamp (auto)</label>
+      <input type="text" name="surveyTimestamp" id="surveyTimestamp" readonly />
+
+      <h3>Household / Housing Details</h3>
+
+      <label>Household ID (local)</label>
+      <input type="text" name="householdId" required>
+
+      <label>Head of Household (Name)</label>
+      <input type="text" name="headName" required>
+
+      <label>Age of Head</label>
+      <input type="number" name="headAge" min="0" required>
+
+      <label>Aadhar Card No</label>
+      <input type="text" name="aadhar" maxlength="12">
+
+      <label>Address</label>
+      <input type="text" name="address">
+
+      <div style="display:flex;gap:12px">
+        <div style="flex:1">
+          <label>State</label><input type="text" name="state">
+        </div>
+        <div style="flex:1">
+          <label>District</label><input type="text" name="district">
+        </div>
+      </div>
+
+      <label>Sub-district / Tehsil</label>
+      <input type="text" name="subDistrict">
+
+      <label>Village / Town</label>
+      <input type="text" name="village">
+
+      <label>Ward / Block</label>
+      <input type="text" name="ward">
+
+      <label>PIN Code</label>
+      <input type="text" name="pinCode" maxlength="6">
+
+      <label>House / Building No.</label>
+      <input type="text" name="houseNumber">
+
+      <label>Street / Locality</label>
+      <input type="text" name="street">
+
+      <label>Type of House</label>
+      <select name="houseType">
+        <option value="">--Select--</option>
+        <option>Pucca</option><option>Kutcha</option><option>Semi-pucca</option>
+      </select>
+
+      <label>Ownership Status</label>
+      <select name="ownershipStatus">
+        <option value="">--Select--</option>
+        <option>Owned</option><option>Rented</option><option>Other</option>
+      </select>
+
+      <label>Number of Rooms</label>
+      <input type="number" name="numberOfRooms" min="0">
+
+      <label>Toilet Facility</label>
+      <select name="toiletFacility">
+        <option>Private</option><option>Shared</option><option>Open defecation</option><option>None</option>
+      </select>
+
+      <label>Drinking Water Source</label>
+      <select name="drinkingWaterSource">
+        <option>Tap (piped)</option><option>Hand pump</option><option>Tube well</option><option>Open well</option><option>Other</option>
+      </select>
+
+      <label>Electricity Available?</label>
+      <select name="electricityAvailable"><option>Yes</option><option>No</option></select>
+
+      <label>Kitchen Available?</label>
+      <select name="kitchenAvailable"><option>Yes</option><option>No</option></select>
+
+      <label>Cooking Fuel</label>
+      <select name="cookingFuel"><option>LPG</option><option>Firewood</option><option>Kerosene</option><option>Electric</option><option>Other</option></select>
+
+      <h4>Household Amenities & Assets</h4>
+      <label>Has Refrigerator?</label>
+      <select name="hasRefrigerator"><option>Yes</option><option>No</option></select>
+
+      <label>Has TV?</label>
+      <select name="hasTV"><option>Yes</option><option>No</option></select>
+
+      <label>Internet Connection?</label>
+      <select name="internetConnection"><option>Yes</option><option>No</option></select>
+
+      <label>Vehicle Ownership (describe)</label>
+      <input type="text" name="vehicleOwnership">
+
+      <hr />
+
+      <h3>Household Members (Population Enumeration)</h3>
+      <div id="membersContainer"></div>
+
+      <button type="button" class="btn btn-add" onclick="addMember()">+ Add Household Member</button>
+
+      <div style="margin-top:18px">
+        <button type="submit" class="btn btn-save">Save Household</button>
+      </div>
+    </form>
+  </div>
+
+<script>
+  // auto timestamp
+  document.getElementById('surveyTimestamp').value = new Date().toLocaleString();
+
+  let memberIndex = 0;
+  function addMember() {
+    const c = document.getElementById('membersContainer');
+    const idx = memberIndex++;
+    const div = document.createElement('div');
+    div.className = 'member-card';
+    div.id = 'member-' + idx;
+    div.innerHTML = `
+      <button type="button" class="btn-remove" onclick="removeMember(${idx})">Remove</button>
+      <label>Full Name</label>
+      <input type="text" name="members[${idx}].fullName" required>
+      <label>Aadhar Card Number</label>
+      <input type="text" name="members[${idx}].aadhar" maxlength="12">
+      <label>Relationship to Head</label>
+      <input type="text" name="members[${idx}].relationship">
+      <label>Gender</label>
+      <select name="members[${idx}].gender"><option>M</option><option>F</option><option>Other</option></select>
+      <label>Age</label>
+      <input type="number" name="members[${idx}].age" min="0">
+      <label>Disability</label><input type="text" name="members[${idx}].disability">
+      <label>Marital Status</label>
+      <select name="members[${idx}].maritalStatus"><option>Never married</option><option>Married</option><option>Widowed</option><option>Divorced</option></select>
+      <label>Mother Tongue</label><input type="text" name="members[${idx}].motherTongue">
+      <label>Education Level</label><input type="text" name="members[${idx}].educationLevel">
+      <label>Employment Status</label><input type="text" name="members[${idx}].employmentStatus">
+    `;
+    c.appendChild(div);
+  }
+  function removeMember(i){ const el=document.getElementById('member-'+i); if(el) el.remove(); }
+</script>
+</body>
+</html>

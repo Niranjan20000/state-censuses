@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StateCensus Hub</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            color: #333;
+        }
+
+        .header {
+            text-align: center;
+            padding: 50px 20px;
+            background: #ffffff;
+            border-bottom: 3px solid #e3e8ff;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            color: #233ce6;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            font-size: 16px;
+            color: #555;
+            letter-spacing: 0.6px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 70px auto;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            padding: 0 20px;
+        }
+
+        .card {
+            width: 360px;
+            padding: 45px 30px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.12);
+            text-align: center;
+            transition: 0.3s ease;
+            border-top: 5px solid #2b4eff;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.17);
+        }
+
+        .card h3 {
+            font-size: 20px;
+            margin-bottom: 30px;
+            color: #1b1b1b;
+            font-weight: 600;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 28px;
+            font-size: 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            background: #233ce6;
+            color: #fff;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #122fc1;
+        }
+
+        .register-text {
+            margin-top: 18px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .register-text a {
+            color: #233ce6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-text a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">StateCensus Hub</div>
+        <div class="tagline">One Platform. Complete Population Intelligence.</div>
+    </div>
+
+    <!-- LOGIN OPTIONS -->
+    <div class="container">
+
+        <!-- CDPO CARD -->
+        <div class="card">
+            <h3>Login as a Child Development Project Officer</h3>
+            <a href="/cdpo/login" class="btn">Login</a>
+            <div class="register-text">
+                New user? <a href="/cdpo/register">Register now</a>
+            </div>
+        </div>
+
+        <!-- AWW CARD -->
+        <div class="card">
+            <h3>Login as an Anganwadi Worker</h3>
+            <a href="/aww/login" class="btn">Login</a>
+            <div class="register-text">
+                New user? <a href="/aww/register">Register now</a>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
